@@ -221,7 +221,7 @@ namespace {
             tcp_s.flags(TCP::SYN | TCP::ACK);
             
             BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendSynAck().";
-            responder->send( ip_s / tcp_s );
+            responder->send( ip_s / tcp_s, __FUNCTION__ );
         }
         void sendData(psh_ack const&)    {
             BOOST_LOG_TRIVIAL(debug) << "[ESTABLISHED] sendData";
@@ -237,7 +237,7 @@ namespace {
             // tcp_s /= *raw;
             
             BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendData().";
-            responder->send( ip_s / tcp_s / *(raw) );
+            responder->send( ip_s / tcp_s / *(raw), __FUNCTION__ );
 
             // Remove the payload
             // delete tcp_s.release_inner_pdu();
@@ -251,7 +251,7 @@ namespace {
             tcp_s.flags(TCP::FIN | TCP::ACK);
             tcp_s.ack_seq( tcp_r.seq() + 1 );
             
-            responder->send( ip_s / tcp_s );
+            responder->send( ip_s / tcp_s, __FUNCTION__ );
         }
 
         // Guard can be defined as bool function
@@ -295,10 +295,11 @@ namespace {
 
     // Testing utilities.
     //
-    static char const* const state_names[] = { "LISTEN", "SYN_RCVD", "ESTABLISHED" };
-    void pstate(integratio const& i)
+    static char const* const state_names[] = { "LISTEN", "SYN_RCVD", "ESTABLISHED", "FIN_WAIT_1", "TIME_WAIT", "CLOSING", "CLOSED", "SYN_SENT", "CLOSE_WAIT", "LAST_ACK" };
+    string pstate(boost::shared_ptr<void> i)
     {
-        BOOST_LOG_TRIVIAL(debug) << " -> " << state_names[i.current_state()[0]];
+        
+        return state_names[boost::static_pointer_cast<integratio>(i)->current_state()[0]];
     }
 
 }
@@ -461,7 +462,10 @@ void TCPResponder::processPacket(PDU* pdu) {
 
 }
 
-bool TCPResponder::send(IP pdu) {
+bool TCPResponder::send(IP pdu, string funcName) {
+
+    // Check current state
+    string currState = pstate( stateMachine );
 
 	// used to send Packet
     PacketSender sender;
@@ -470,6 +474,8 @@ bool TCPResponder::send(IP pdu) {
     BOOST_LOG_TRIVIAL(debug)    << pdu.rfind_pdu<IP>().src_addr() << ':' << pdu.rfind_pdu<TCP>().sport() << " >> " 
                                 << pdu.rfind_pdu<IP>().dst_addr() << ':' << pdu.rfind_pdu<TCP>().dport() << " ("
                                 << flags( pdu.find_pdu<TCP>() ) << ")" << std::endl; 
+    BOOST_LOG_TRIVIAL(debug) << "[SEND] TCPResponder::send() was called by: " << funcName
+                                << ", state: " << currState;
 
     sender.send(pdu);
 }

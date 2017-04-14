@@ -28,7 +28,7 @@ IPListener::IPListener() {
 	remoteAddress = IPv4Address("192.168.178.37");
 
 	// Set the sniffer
-	snifferConfig.set_filter( "ip and tcp and (tcp port 80) and (ip src 192.168.178.37) and (ip dst " + localAddress.to_string() + ")");
+	snifferConfig.set_filter( "ip and tcp and (tcp port 80) and (ip src 192.168.178.37 or ip src 192.168.178.89) and (ip dst " + localAddress.to_string() + " or ip dst " + remoteAddress.to_string() + ")");
 	snifferConfig.set_immediate_mode(true);
 	
 	sniffer = new Sniffer("eth0", snifferConfig);
