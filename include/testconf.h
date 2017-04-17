@@ -22,7 +22,7 @@ public:
 
 class DnzConf: public Conf {
 public:
-	string 	q-addr;
+	string 	q_addr;
 	string 	response;
 };
 
@@ -36,7 +36,7 @@ public:
 class ContentConf: public Conf {
 public:
 	string 	resource;
-	string 	http-status;
+	string 	http_status;
 	string 	headers;
 	string 	body;
 };
@@ -45,7 +45,7 @@ class TestCase {
 public:
 	string 	test_id;
 	string 	interface;
-	int 	lis-port;
+	int 	lis_port;
 	string	category;
-	list<Configuration>	parameters;
+	list<Conf>	parameters;
 };

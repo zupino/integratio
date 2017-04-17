@@ -7,12 +7,16 @@
 #ifndef INC_RESPONDER
 #define INC_RESPONDER
 
+// Total number of TestConf per responder
+#define MAX_TEST_CONF 10
+
 // Shared ptr for state machine class attribute
 #include <boost/shared_ptr.hpp>
 
 // LibTin
 #include <tins/tins.h>
 #include "wqueue.h"
+#include "testconf.h"
 
 using namespace Tins;
 
@@ -44,12 +48,17 @@ class TCPResponder: public Responder {
 public: 
         boost::shared_ptr<void> stateMachine;
         int streamId = -1;
+        std::vector<TimeConf> timeTests;
+        std::vector<TczConf> tczTests;
 
         TCPResponder(wqueue<PDU*> *q);
         ~TCPResponder();
         void startListen();
         bool send(IP pdu, string funcName = "");
         void processPacket(PDU* pdu);
+
+        void addTimeConf(TimeConf t);
+        void addTczConf(TczConf t);
 };
 
 class UDPResponder: public Responder {};

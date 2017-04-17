@@ -13,6 +13,12 @@
 #include "wqueue.h"
 #include "common.h"
 
+// Used for delay (C++11)
+#include <chrono>
+#include <thread>
+using namespace std::this_thread; // sleep_for, sleep_until
+using namespace std::chrono; // nanoseconds, system_clock, seconds
+
 namespace logging = boost::log;
 namespace mpl = boost::mpl;
 namespace msm = boost::msm;
@@ -462,9 +468,21 @@ void TCPResponder::processPacket(PDU* pdu) {
 
 }
 
-bool TCPResponder::send(IP pdu, string funcName) {
+bool TCPResponder::send(IP pdu, string currAction) {
 
     // Check current state
+    //
+    //  0 = "LISTEN"
+    //  1 = "SYN_RCVD"
+    //  2 = "ESTABLISHED"
+    //  3 = "FIN_WAIT_1"
+    //  4 = "TIME_WAIT"
+    //  5 = "CLOSING"
+    //  6 = "CLOSED"
+    //  7 = "SYN_SENT"
+    //  8 = "CLOSE_WAIT"
+    //  9 = "LAST_ACK"
+    //
     string currState = pstate( stateMachine );
 
 	// used to send Packet
@@ -474,8 +492,24 @@ bool TCPResponder::send(IP pdu, string funcName) {
     BOOST_LOG_TRIVIAL(debug)    << pdu.rfind_pdu<IP>().src_addr() << ':' << pdu.rfind_pdu<TCP>().sport() << " >> " 
                                 << pdu.rfind_pdu<IP>().dst_addr() << ':' << pdu.rfind_pdu<TCP>().dport() << " ("
                                 << flags( pdu.find_pdu<TCP>() ) << ")" << std::endl; 
-    BOOST_LOG_TRIVIAL(debug) << "[SEND] TCPResponder::send() was called by: " << funcName
+    BOOST_LOG_TRIVIAL(debug) << "[SEND] TCPResponder::send() was called by: " << currAction
                                 << ", state: " << currState;
+    
+    // delay use case
+    for(TimeConf t : timeTests) {
+        if( currAction == t.action && currState == t.state ) {
+            sleep_for( seconds( t.delay ) );
+        }
+    }
 
     sender.send(pdu);
+}
+
+
+void TCPResponder::addTimeConf(TimeConf t) {
+    timeTests.push_back(t);
+}
+
+void TCPResponder::addTczConf(TczConf t){
+    tczTests.push_back(t);
 }
