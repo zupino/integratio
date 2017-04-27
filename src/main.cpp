@@ -51,7 +51,6 @@ if( argc>0 ) {
 	    
 		Conf* conf = jsonConf( strConf );
 		TimeConf* tc = dynamic_cast<TimeConf*>(conf);
-		cout << "[MAIN] Action: " << tc->action;
 		tcz.addTimeConf( *tc );
 	}
 

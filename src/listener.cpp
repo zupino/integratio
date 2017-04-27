@@ -37,7 +37,7 @@ IPListener::IPListener() {
 								") or (ip dst " + remoteAddress.to_string() + "))");
 	snifferConfig.set_immediate_mode(true);
 	
-	sniffer = new Sniffer("eth0", snifferConfig);
+	sniffer = new Sniffer("lo", snifferConfig);
 	
 
 }

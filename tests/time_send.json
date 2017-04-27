@@ -5,8 +5,8 @@
     "category" : "time",
     "parameter": [
         {
-            "state" : "LISTEN",
-            "action": "sendSynAck",
+            "state" : "ESTABLISHED",
+            "action": "sendData",
             "delay" : 1
         }
     ]

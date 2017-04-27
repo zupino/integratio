@@ -31,11 +31,17 @@ def connect_ex( time = 3, server_address = ("192.168.178.89", 80) ):
 # Teardown code is anything after yield statement
 @pytest.fixture(scope='function')
 def runConnector():
-    p = subprocess.Popen(["./bin/integratio"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time.json"])
     time.sleep(0.1)
     yield p
     p.kill();
 
+@pytest.fixture(scope='function')
+def runConnectorSend():
+    p = subprocess.Popen(["./bin/integratio", "./tests/time_send.json"])
+    time.sleep(0.1)
+    yield p
+    p.kill();
 
 # TCZ will wait 3 seconds before reply to SYN.
 # connect has a timeout of 1 in this test case.
@@ -57,7 +63,7 @@ def test_delay_2(runConnector):
     assert connect_ex(2) == 0
 
 # This test verify the delay in sending an HTTP response
-def test_delay_3(runConnector):
+def test_delay_3(runConnectorSend):
     server_address = ("192.168.178.89", 80)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
