@@ -338,7 +338,7 @@ TCPResponder::~TCPResponder() {
 
 void TCPResponder::startListen() {
 	// This is the method the Thread attach to
-	BOOST_LOG_TRIVIAL(debug) << "[[CheckERROR]] Queue copied, now waiting for incoming packets";
+	
 	bool terminateFlag = true;
 	TCP* tcp_r = NULL;
 
@@ -350,7 +350,6 @@ void TCPResponder::startListen() {
 		PDU* p = pkt->inner_pdu();
 		while ( p ) {
 		
-			BOOST_LOG_TRIVIAL(debug)	<< "[[CheckERROR]] inner_pdu just taken from the Queue: " << p;
 			BOOST_LOG_TRIVIAL(debug)    << pkt->find_pdu<IP>()->src_addr() << ':' << pkt->find_pdu<TCP>()->sport() << " >> " 
 		                        		<< pkt->find_pdu<IP>()->dst_addr() << ':' << pkt->find_pdu<TCP>()->dport() << " ("
 		                        		<< flags( tcp_r ) << ")";
@@ -507,9 +506,11 @@ bool TCPResponder::send(IP pdu, string currAction) {
 
 
 void TCPResponder::addTimeConf(TimeConf t) {
+    BOOST_LOG_TRIVIAL(debug)    << "About to push_back timeTests.";
     timeTests.push_back(t);
 }
 
 void TCPResponder::addTczConf(TczConf t){
+    BOOST_LOG_TRIVIAL(debug)    << "About to push_back tczTests.";
     tczTests.push_back(t);
 }

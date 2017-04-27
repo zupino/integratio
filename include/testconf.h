@@ -1,8 +1,14 @@
 /* testconf.h */
+#ifndef INC_COMMON
+#define INC_COMMON
+
+#include <list>
 
 using namespace std;
 
 class Conf {
+public:
+	virtual ~Conf() {}
 };
 
 class TczConf: public Conf {
@@ -49,3 +55,5 @@ public:
 	string	category;
 	list<Conf>	parameters;
 };
+
+#endif /* INC_COMMON */

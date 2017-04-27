@@ -13,6 +13,8 @@
 // Thread
 #include <thread>
 
+bool syn_flag = true;
+
 Listener::Listener() {
 
 }
@@ -28,7 +30,11 @@ IPListener::IPListener() {
 	remoteAddress = IPv4Address("192.168.178.37");
 
 	// Set the sniffer
-	snifferConfig.set_filter( "ip and tcp and (tcp port 80) and (ip src 192.168.178.37 or ip src 192.168.178.89) and (ip dst " + localAddress.to_string() + " or ip dst " + remoteAddress.to_string() + ")");
+	snifferConfig.set_filter(  	"ip and tcp and (tcp port 80) \
+								and ((ip src 192.168.178.37) or \
+								(ip src 192.168.178.89)) and \
+								((ip dst " + localAddress.to_string() + 
+								") or (ip dst " + remoteAddress.to_string() + "))");
 	snifferConfig.set_immediate_mode(true);
 	
 	sniffer = new Sniffer("eth0", snifferConfig);
@@ -50,25 +56,26 @@ bool Listener::pktCallback(PDU &pdu) {
     	tcp_r = pdu.find_pdu<TCP>();
     	ip_r = pdu.find_pdu<IP>();
 
+//
+//	Locking a listener on the TCP src port of the first
+//	SYN pkt received.     	
+//
+/*
+		if( syn_flag && (tcp_r->flags() == TCP::SYN) ) {
+			syn_flag = false;
+			BOOST_LOG_TRIVIAL(debug) 	<< "\t\t--> SYN incoming, setting flag: " << syn_flag;
 
-		BOOST_LOG_TRIVIAL(debug)    << "[CheckERROR]" << ip_r->src_addr() << ':' << tcp_r->sport() << " >> " 
-	                        		<< ip_r->dst_addr() << ':' << tcp_r->dport() << " ("
-	                        		<< flags( tcp_r ) << ") ";
-	                        		// << payload << std::endl;
+			// Set the sniffer
+			sniffer->set_filter(  	"ip and tcp and (tcp port 80) \
+								and ((ip src 192.168.178.37) or \
+								(ip src 192.168.178.89)) and \
+								((ip dst " + localAddress.to_string() + 
+								") or (ip dst " + remoteAddress.to_string() + ")) and \
+								(tcp dst port" + to_string( tcp_r->dport() ) + ")");
 
 
-		/* DEBUG */
-		PDU* p = pdu.inner_pdu();
-		while( p ) {
-			BOOST_LOG_TRIVIAL(debug)	<< "[CheckERROR] inner_pdu inserted in the Queue: " << p;
-			BOOST_LOG_TRIVIAL(debug)    << ip_r->src_addr() << ':' << tcp_r->sport() << " >> " 
-	                        			<< ip_r->dst_addr() << ':' << tcp_r->dport() << " ("
-	                        			<< flags( tcp_r ) << ") " << p->pdu_type();
-			p = p->inner_pdu();
 		}
-		/* DEBUG */
-
-
+*/
 		pktQueue->add( pdu.clone() );
 		
     }

@@ -3,6 +3,10 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 
+// To read conf file
+#include <fstream>
+#include <streambuf>
+
 // Threads!
 #include <thread>
 
@@ -11,6 +15,9 @@
 
 // Listener
 #include "listener.h"
+
+// Test case configuration
+#include "common.h"
 
 namespace logging = boost::log;
 namespace mpl = boost::mpl;
@@ -31,25 +38,25 @@ int main( int argc, char *argv[] ) {
 	IPListener connector;
 	TCPResponder tcz( connector.pktQueue );
 
-	// This will be done by a Configurator
-	TimeConf t1;
-	t1.action = "sendSynAck";
-	t1.state = "LISTEN";
-	t1.delay = 3;
+if( argc>0 ) {
 
-	TimeConf t2;
-	t2.action = "sendFinAck";
-	t2.state = "ESTABLISHED";
-	t2.delay = 3;
+		std::string fileName( argv[1] );
 
-	tcz.addTimeConf(t1);
-	tcz.addTimeConf(t2);
+		// Test case Configuration
+	    std::ifstream i( fileName );
+		std::string strConf((	std::istreambuf_iterator<char>(i)),
+	    						std::istreambuf_iterator<char>() 	);
+
+
+	    
+		Conf* conf = jsonConf( strConf );
+		TimeConf* tc = dynamic_cast<TimeConf*>(conf);
+		cout << "[MAIN] Action: " << tc->action;
+		tcz.addTimeConf( *tc );
+	}
 
 	// This is done here only for development
 	connector.responders.push_back( &tcz );
 
 	connector.start();
-	// std::thread tc( &Listener::start, connector );
-	// tc.join();
 }
-

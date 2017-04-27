@@ -1,4 +1,7 @@
 #include "common.h"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 std::string flags(TCP* t){
     std::string f = "";
@@ -37,3 +40,32 @@ std::string flags(TCP* t){
 }
 
 
+/* Tool for reading Test Conf from JSON */
+
+Conf* jsonConf(std::string jsonConfig) {
+
+    // parse explicitly
+    json jc = json::parse( jsonConfig );
+
+    if( jc["category"] == "time" ) {
+        TimeConf* t = new TimeConf();
+
+        for( auto& element : jc["parameter"] ) {
+            t->state = element["state"].get<std::string>();
+            t->action = element["action"].get<std::string>();
+            t->delay = element["delay"].get<int>();
+        }
+
+
+        return t;
+        
+    } else if( jc["category"] == "packet" ) {
+        // packet case
+        return NULL;
+
+    } else {
+        // default
+        return NULL;
+    }
+
+}
