@@ -83,17 +83,25 @@ def test_delay_3(runConnectorSend):
     assert (end - start) > 1
 
 # This test verify the delay is applied to a closing connection
-def test_delay_4(runConnectorCloseDelay):
-    server_address = ("192.168.178.89", 80)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setblocking(1)
-    sock.connect(server_address)
 
-    sock.send("get /delay.html")
-    print sock.recv(1024)
+# Commenting this out, socket.shutdown() is not a blocking call
+# so we can't test it by checking the delay as for the connect()
+# Nevertheless, checking at the tcpdump traces, the test is passed.
 
-    start = time.time()
-    sock.shutdown(socket.SHUT_RDWR)
-    end = time.time()
+# TODO  Find a way to automate this test (programmatic process of
+#       tcpdump traces, maybe?)
 
-    assert (end - start) > 1
+#def test_delay_4(runConnectorCloseDelay):
+#    server_address = ("192.168.178.89", 80)
+#    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#    sock.setblocking(1)
+#    sock.connect(server_address)
+#
+#    sock.send("get /delay.html")
+#    print sock.recv(1024)
+#
+#    start = time.time()
+#    sock.shutdown(socket.SHUT_RDWR)
+#    end = time.time()
+#
+#    assert (end - start) > 1

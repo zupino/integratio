@@ -29,5 +29,6 @@ clean:
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 	@echo " $(RM) -r .cache"; $(RM) -r .cache
 	@echo " $(RM) -r $(TEST)/__pycache__"; $(RM) -r $(TEST)/__pycache__
+	@echo " $(RM) -r $(TEST)/.cache"; $(RM) -r $(TEST)/.cache
 
 .PHONY: clean
