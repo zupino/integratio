@@ -43,6 +43,13 @@ def runConnectorSend():
     yield p
     p.kill();
 
+@pytest.fixture(scope='function')
+def runConnectorCloseDelay():
+    p = subprocess.Popen(["./bin/integratio", "./tests/time_close.json"])
+    time.sleep(0.1)
+    yield p
+    p.kill();
+
 # TCZ will wait 3 seconds before reply to SYN.
 # connect has a timeout of 1 in this test case.
 # TEST PASS if the connect(1) raise the Timeout
@@ -71,6 +78,22 @@ def test_delay_3(runConnectorSend):
     sock.send("get /delay.html")
     start = time.time()
     print sock.recv(1024)
+    end = time.time()
+
+    assert (end - start) > 1
+
+# This test verify the delay is applied to a closing connection
+def test_delay_4(runConnectorCloseDelay):
+    server_address = ("192.168.178.89", 80)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setblocking(1)
+    sock.connect(server_address)
+
+    sock.send("get /delay.html")
+    print sock.recv(1024)
+
+    start = time.time()
+    sock.shutdown(socket.SHUT_RDWR)
     end = time.time()
 
     assert (end - start) > 1
