@@ -31,7 +31,7 @@ public:
         uint16_t remotePort;
         // This should be one side of the incoming Queue.
         // The other side is filled in by the Listener
-        wqueue<PDU*> *incomingQueue;
+        wqueue<PDU*> *incomingQueue = new wqueue<PDU*>();
         
         Responder();
         ~Responder();
@@ -39,9 +39,17 @@ public:
         // Each child need to implement this,
         // used to have the responder attached to the incoming packet queue
         virtual void startListen() = 0;
+        
+        // Each child need to implement this,
+        // used by the listener to correctly forward packets
+        virtual int getId() = 0;
 
         bool send();
-        void processPacket(PDU& pdu);       
+        virtual void processPacket(PDU& pdu) = 0;
+
+        // Each child must implement this, 
+        // used by the Listener to get the packet queue
+        virtual wqueue<Tins::PDU*>* getQueue(); 
 };
 
 class TCPResponder: public Responder {
@@ -51,14 +59,17 @@ public:
         std::vector<TimeConf> timeTests;
         std::vector<TczConf> tczTests;
 
-        TCPResponder(wqueue<PDU*> *q);
+        TCPResponder();
         ~TCPResponder();
         void startListen();
         bool send(IP pdu, string funcName = "");
         void processPacket(PDU* pdu);
 
+        int getId();
+
         void addTimeConf(TimeConf t);
         void addTczConf(TczConf t);
+
 };
 
 class UDPResponder: public Responder {};

@@ -36,7 +36,7 @@ int main( int argc, char *argv[] ) {
 	initLog();
 
 	IPListener connector;
-	TCPResponder tcz( connector.pktQueue );
+	TCPResponder tcz;
 
 if( argc>0 ) {
 
