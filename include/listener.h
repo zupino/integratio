@@ -33,7 +33,7 @@ public:
     ~Listener();
     virtual bool pktCallback(PDU &pdu);
     bool configure(std::string jsonConfig);
-    virtual void start();
+    void start();
     bool forwardPacket(PDU* pkt);
 
 };

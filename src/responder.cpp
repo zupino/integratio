@@ -338,7 +338,7 @@ TCPResponder::~TCPResponder() {
 
 void TCPResponder::startListen() {
 	// This is the method the Thread attach to
-	
+    BOOST_LOG_TRIVIAL(debug) << "[TCPResponder][startListen()] ENtering startListener()";	
 	bool terminateFlag = true;
 	TCP* tcp_r = NULL;
 

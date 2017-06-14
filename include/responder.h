@@ -45,7 +45,7 @@ public:
         virtual int getId() = 0;
 
         bool send();
-        virtual void processPacket(PDU& pdu) = 0;
+        virtual void processPacket(PDU* pdu) = 0;
 
         // Each child must implement this, 
         // used by the Listener to get the packet queue

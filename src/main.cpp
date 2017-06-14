@@ -36,7 +36,8 @@ int main( int argc, char *argv[] ) {
 	initLog();
 
 	IPListener connector;
-	TCPResponder tcz;
+	TCPResponder tcz1;
+    TCPResponder tcz2;
 
 if( argc>0 ) {
 
@@ -51,11 +52,13 @@ if( argc>0 ) {
 	    
 		Conf* conf = jsonConf( strConf );
 		TimeConf* tc = dynamic_cast<TimeConf*>(conf);
-		tcz.addTimeConf( *tc );
+		tcz1.addTimeConf( *tc );
+        tcz2.addTimeConf( *tc );
 	}
 
 	// This is done here only for development
-	connector.responders.push_back( &tcz );
+	connector.responders.push_back( &tcz1 );
+    connector.responders.push_back( &tcz2 );
 
 	connector.start();
 }

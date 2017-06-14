@@ -47,7 +47,7 @@ IPListener::~IPListener() {
 }
 
 bool Listener::pktCallback(PDU &pdu) {
-
+    BOOST_LOG_TRIVIAL(debug) << "[Listener][pktCallback()] Entering pktCallback()";
     TCP* tcp_r;
     IP* ip_r;
 
@@ -104,6 +104,8 @@ void Listener::start() {
 }
 
 bool Listener::forwardPacket(PDU* pkt) {
+    BOOST_LOG_TRIVIAL(debug) << "[Listner][forwardPacket()] Entering forwardPacket()";
+
     TCP* tcp_r;
     int stream = 0;
     list<Responder*>::iterator it;
@@ -114,7 +116,7 @@ bool Listener::forwardPacket(PDU* pkt) {
         bool sent = false;
 
         for(it = responders.begin(); it != responders.end(); it++) {
-            if (stream == (*it)->getId()) {
+            if ((*it)->getId() == stream) {
                 (*it)->getQueue()->add(pkt);
                 BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] pkt forward to existing stream";
                 return true;
@@ -122,12 +124,15 @@ bool Listener::forwardPacket(PDU* pkt) {
         }
 
         for(it = responders.begin(); it != responders.end(); it++) {
-                if (stream == -1) {
+                if ((*it)->getId() == -1) {
                     (*it)->getQueue()->add(pkt);
                     BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] pkt forward to new stream";
                     return true;
                 }
             }
+
+        BOOST_LOG_TRIVIAL(debug)    <<  "[Listener][forwardPacket()] Packet not matching with any strem," <<
+                                        " and all Responders are busy";
     }
         
     else {
