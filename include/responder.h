@@ -55,7 +55,6 @@ public:
 class TCPResponder: public Responder {
 public: 
         boost::shared_ptr<void> stateMachine;
-        int streamId = -1;
         std::vector<TimeConf> timeTests;
         std::vector<TczConf> tczTests;
 

@@ -369,7 +369,7 @@ void TCPResponder::startListen() {
 }
 
 int TCPResponder::getId() {
-    return this->streamId;
+    return boost::static_pointer_cast<integratio>(stateMachine)->streamId;
 }
 
 wqueue<PDU*> * Responder::getQueue() {
