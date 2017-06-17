@@ -47,14 +47,14 @@ IPListener::~IPListener() {
 }
 
 bool Listener::pktCallback(PDU &pdu) {
-
+    BOOST_LOG_TRIVIAL(debug) << "[Listener][pktCallback()] Entering pktCallback()";
     TCP* tcp_r;
     IP* ip_r;
 
     if( &pdu ){
     	// Update local packet (last received)
-    	tcp_r = pdu.find_pdu<TCP>();
-    	ip_r = pdu.find_pdu<IP>();
+    	// tcp_r = pdu.find_pdu<TCP>();
+    	// ip_r = pdu.find_pdu<IP>();
 
 //
 //	Locking a listener on the TCP src port of the first
@@ -76,7 +76,7 @@ bool Listener::pktCallback(PDU &pdu) {
 
 		}
 */
-		pktQueue->add( pdu.clone() );
+		forwardPacket( pdu.clone() );
 		
     }
 
@@ -102,6 +102,56 @@ void Listener::start() {
 
 	sniffer->sniff_loop( make_sniffer_handler(this, &Listener::pktCallback) );
 }
+
+bool Listener::forwardPacket(PDU* pkt) {
+    BOOST_LOG_TRIVIAL(debug) << "[Listner][forwardPacket()] Entering forwardPacket()";
+
+    TCP* tcp_r;
+    int stream = 0;
+    list<Responder*>::iterator it;
+
+    if( pkt != NULL ) {
+        tcp_r = pkt->find_pdu<TCP>();
+        stream = tcp_r->sport();
+        bool sent = false;
+
+        for(it = responders.begin(); it != responders.end(); it++) {
+            if ((*it)->getId() == stream) {
+                (*it)->getQueue()->add(pkt);
+                BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] pkt forward to existing stream";
+                return true;
+            }
+        }
+
+        for(it = responders.begin(); it != responders.end(); it++) {
+                if ((*it)->getId() == -1) {
+                    (*it)->getQueue()->add(pkt);
+                    BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] pkt forward to new stream";
+                    return true;
+                }
+            }
+
+        BOOST_LOG_TRIVIAL(debug)    <<  "[Listener][forwardPacket()] Packet not matching with any strem," <<
+                                        " and all Responders are busy";
+    }
+        
+    else {
+        BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] The pkt does not have TCP layer.";
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

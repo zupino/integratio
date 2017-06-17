@@ -1,0 +1,13 @@
+{
+    "test-id"  : "delay001",
+    "interface": "eth0",
+    "lis-port" : 80,
+    "category" : "time",
+    "parameter": [
+        {
+            "state" : "LISTEN",
+            "action": "sendSynAck",
+            "delay" : 4
+        }
+    ]
+}

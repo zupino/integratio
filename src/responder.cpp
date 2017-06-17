@@ -324,9 +324,9 @@ Responder::Responder() {
 	
 }
 
-TCPResponder::TCPResponder(wqueue<PDU*> *q) : stateMachine( new integratio ) {
+TCPResponder::TCPResponder() : stateMachine( new integratio ) {
 	BOOST_LOG_TRIVIAL(debug) << "[TCPResponder] Entering constructor";
-	incomingQueue = q;
+	// incomingQueue = q;
 	boost::static_pointer_cast<integratio>(stateMachine)->setResponder( this );
 	boost::static_pointer_cast<integratio>(stateMachine)->start();
 }
@@ -338,7 +338,7 @@ TCPResponder::~TCPResponder() {
 
 void TCPResponder::startListen() {
 	// This is the method the Thread attach to
-	
+    BOOST_LOG_TRIVIAL(debug) << "[TCPResponder][startListen()] ENtering startListener()";	
 	bool terminateFlag = true;
 	TCP* tcp_r = NULL;
 
@@ -366,6 +366,14 @@ void TCPResponder::startListen() {
 		}
 	}
 	
+}
+
+int TCPResponder::getId() {
+    return boost::static_pointer_cast<integratio>(stateMachine)->streamId;
+}
+
+wqueue<PDU*> * Responder::getQueue() {
+    return this->incomingQueue;
 }
 
 void TCPResponder::processPacket(PDU* pdu) {
