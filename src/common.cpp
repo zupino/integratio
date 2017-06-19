@@ -1,4 +1,5 @@
 #include "common.h"
+#include "testconf.h"
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -46,6 +47,7 @@ Conf* jsonConf(std::string jsonConfig) {
 
     // parse explicitly
     json jc = json::parse( jsonConfig );
+    IPListener * listener = new IPListener();
 
     if( jc["category"] == "time" ) {
         TimeConf* t = new TimeConf();
@@ -67,5 +69,17 @@ Conf* jsonConf(std::string jsonConfig) {
         // default
         return NULL;
     }
+}
 
+std::string trim(const std::string& str,
+                 const std::string& whitespace)
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos)
+        return ""; // no content
+
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
 }
