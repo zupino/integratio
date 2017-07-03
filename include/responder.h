@@ -17,7 +17,7 @@
 #include <tins/tins.h>
 #include "wqueue.h"
 #include "testconf.h"
-
+#include "applicator.h"
 using namespace Tins;
 
 class Responder {
@@ -57,6 +57,7 @@ public:
         boost::shared_ptr<void> stateMachine;
         std::vector<TimeConf> timeTests;
         std::vector<TczConf> tczTests;
+        Applicator* httz = NULL;
 
         TCPResponder();
         ~TCPResponder();

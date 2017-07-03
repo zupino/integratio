@@ -1,8 +1,22 @@
 #include "applicator.h"
 #include "common.h"
 
+Applicator::Applicator() {}
+Applicator::~Applicator() {}
+HTTPApplicator::HTTPApplicator() {}
+HTTPApplicator::~HTTPApplicator() {}
+
 string Applicator::getResponse(string requestPayload) {
-    return resources[requestPayload];
+    
+    std::unordered_map<std::string,std::string>::const_iterator got = resources.find(requestPayload);
+    if ( got == resources.end() ) {
+        std::cout << "[Applicator] Resource not found.";
+        return NULL;
+    }
+    else {
+        return got->second;
+    }
+
 }
 
 bool HTTPApplicator::addResource(ContentConf c) {
@@ -19,3 +33,5 @@ bool HTTPApplicator::addResource(ContentConf c) {
     resources[c.resource] = complete;
 
 }
+
+

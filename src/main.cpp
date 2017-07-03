@@ -19,6 +19,9 @@
 // Test case configuration
 #include "common.h"
 
+// Applicator for Content test cases
+#include "applicator.h"
+
 namespace logging = boost::log;
 namespace mpl = boost::mpl;
 
@@ -53,10 +56,15 @@ if( argc>0 ) {
 	        						std::istreambuf_iterator<char>() 	);
 
 		    Conf* conf = jsonConf( strConf );
-            // TODO Here simply assuming all tests are TIME test.
-		    TimeConf* tc = dynamic_cast<TimeConf*>(conf);
+            HTTPApplicator http;
 
-            tcz[j-1].addTimeConf( *tc );
+            // TODO Cast different *Conf depending on JSON content
+		    ContentConf* cc = dynamic_cast<ContentConf*>(conf);
+
+            // tcz[j-1].addTimeConf( *tc );
+            http.addResource( *cc );
+            tcz[j-1].httz = &http;
+            
         
             connector.responders.push_back( &tcz[j-1] );
         }

@@ -229,22 +229,35 @@ namespace {
             BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendSynAck().";
             responder->send( ip_s / tcp_s, __FUNCTION__ );
         }
-        void sendData(psh_ack const&)    {
+
+        void sendData(psh_ack const& evt)    {
             BOOST_LOG_TRIVIAL(debug) << "[ESTABLISHED] sendData";
 
-            std::string body = "Zeta spacca i culi!!";
-            int size = body.size();
-            std::string payload =   "HTTP/1.1 200 OK\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nContent-length: " \
-                                    + std::to_string(size) + "\r\nServer: Apache/2.4.10 (Unix)\r\n\r\n" + body;
+            if (responder->httz != NULL) {
+                // Extract the RawPDU object.
+                const RawPDU& raw = evt.p.rfind_pdu<RawPDU>();
 
-            // Prepare and send the packet
-            RawPDU* raw = new RawPDU(payload);
-            tcp_s.flags(TCP::ACK);
-            // tcp_s /= *raw;
+                // Finally, take the payload (this is a vector<uint8_t>)
+                const RawPDU::payload_type& v = raw.payload();
+
+                std::string payload(v.begin(),v.end());
+                string res_payload = responder->httz->getResponse(payload);
+
+                RawPDU* raw_s;
+                            
+                // Prepare and send the packet
+                if(res_payload != "") {
+                    raw_s = new RawPDU(res_payload);
+                } else {
+                    raw_s = new RawPDU("");
+                }
+
+                tcp_s.flags(TCP::ACK);
+                // tcp_s /= *raw;
             
-            BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendData().";
-            responder->send( ip_s / tcp_s / *(raw), __FUNCTION__ );
-
+                BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendData().";
+                responder->send( ip_s / tcp_s / *(raw_s), __FUNCTION__ );
+        }
             // Remove the payload
             // delete tcp_s.release_inner_pdu();
             // raw = new RawPDU("");

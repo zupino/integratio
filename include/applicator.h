@@ -17,6 +17,9 @@ public:
 };
 
 class HTTPApplicator: public Applicator {
+public:
+    HTTPApplicator();
+    ~HTTPApplicator();
     bool addResource(ContentConf c); 
 };
 
