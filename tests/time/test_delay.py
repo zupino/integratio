@@ -36,28 +36,28 @@ def connect_ex( time = 3, server_address = ("192.168.178.89", 80) ):
 # Teardown code is anything after yield statement
 @pytest.fixture(scope='function')
 def runConnector():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time.json"])
     time.sleep(0.1)
     yield p
     p.kill();
 
 @pytest.fixture(scope='function')
 def runConnectorSend():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time_send.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_send_1.json", "./tests/time/time_send_2.json"])
     time.sleep(0.1)
     yield p
     p.kill();
 
 @pytest.fixture(scope='function')
 def runConnectorCloseDelay():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time_close.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_close.json"])
     time.sleep(0.1)
     yield p
     p.kill();
 
 @pytest.fixture(scope='function')
 def runConnectorParallel():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time_parallel_1.json", "./tests/time_parallel_2.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_parallel_1.json", "./tests/time_parallel_2.json"])
     time.sleep(0.1)
     yield p
     p.kill();
@@ -88,7 +88,7 @@ def test_delay_3(runConnectorSend):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
     sock.connect(server_address)
-    sock.send("get /delay.html")
+    sock.send("delay.html")
     start = time.time()
     print sock.recv(1024)
     end = time.time()

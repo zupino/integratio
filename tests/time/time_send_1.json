@@ -1,0 +1,14 @@
+{
+	"test-id": "delay001",
+	"interface": "eth0",
+	"lis-port": 80,
+	"configs": [{
+			"category": "time",
+			"parameters":
+			[{
+				"state": "ESTABLISHED",
+				"action": "sendData",
+				"delay": 1
+			}]
+		}]
+}
