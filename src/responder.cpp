@@ -246,11 +246,7 @@ namespace {
                 RawPDU* raw_s;
                             
                 // Prepare and send the packet
-                if(res_payload != "") {
-                    raw_s = new RawPDU(res_payload);
-                } else {
-                    raw_s = new RawPDU("");
-                }
+                raw_s = new RawPDU(res_payload);
 
                 tcp_s.flags(TCP::ACK);
                 // tcp_s /= *raw;

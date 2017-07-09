@@ -25,7 +25,7 @@
                         "headers"       : "Connection: close\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nServer: Apache/2.4.10 (Unix)\r\n"
                 },
                 {
-                        "resource"      : "/favicon.ico",
+                        "resource"      : "/favicon.ico\n",
                         "http-status"   : "HTTP/1.1 200 OK\r\n",
                         "body"          : "FavICO",
                         "headers"       : "Connection: close\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nServer: Apache/2.4.10 (Unix)\r\n"

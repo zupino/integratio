@@ -12,6 +12,7 @@
 
 // IOstream
 #include <iostream>
+#include <string>
 
 // Listener
 #include "listener.h"
@@ -56,14 +57,14 @@ if( argc>0 ) {
 	        						std::istreambuf_iterator<char>() 	);
 
 		    Conf* conf = jsonConf( strConf );
-            HTTPApplicator http;
+            HTTPApplicator * http = new HTTPApplicator();
 
             // TODO Cast different *Conf depending on JSON content
 		    ContentConf* cc = dynamic_cast<ContentConf*>(conf);
 
             // tcz[j-1].addTimeConf( *tc );
-            http.addResource( *cc );
-            tcz[j-1].httz = &http;
+            http->addResource( *cc );
+            tcz[j-1].httz = http;
             
         
             connector.responders.push_back( &tcz[j-1] );

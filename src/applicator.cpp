@@ -8,10 +8,10 @@ HTTPApplicator::~HTTPApplicator() {}
 
 string Applicator::getResponse(string requestPayload) {
     
-    std::unordered_map<std::string,std::string>::const_iterator got = resources.find(requestPayload);
+    std::unordered_map<std::string,std::string>::iterator got = resources.find(requestPayload);
     if ( got == resources.end() ) {
         std::cout << "[Applicator] Resource not found.";
-        return NULL;
+        return "";
     }
     else {
         return got->second;
@@ -32,6 +32,7 @@ bool HTTPApplicator::addResource(ContentConf c) {
     
     resources[c.resource] = complete;
 
+    return true;
 }
 
 

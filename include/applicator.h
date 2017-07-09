@@ -1,17 +1,20 @@
 #ifndef INC_APPLICATOR
 #define INC_APPLICATOR
 
+// IOstream
+#include <iostream>
 #include <unordered_map>
 #include "testconf.h"
+
 class Applicator {
     
 public:
-    unordered_map <string, string> resources;
+    std::unordered_map <std::string, std::string> resources;
  
     // Methods
     Applicator();
     ~Applicator();
-    string getResponse( string requestPayload );
+    std::string getResponse( std::string requestPayload );
     
     
 };

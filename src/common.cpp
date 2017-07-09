@@ -2,6 +2,8 @@
 #include "testconf.h"
 #include "json.hpp"
 
+using namespace std;
+
 using json = nlohmann::json;
 
 std::string flags(TCP* t){
@@ -56,7 +58,7 @@ Conf* jsonConf(std::string jsonConfig) {
          if( jconfigs["category"] == "time" ) {
              TimeConf* t = new TimeConf();
 
-             for( auto& element : jconfigs["parameter"] ) {
+             for( auto& element : jconfigs["parameters"] ) {
                  t->state = element["state"].get<std::string>();
                  t->action = element["action"].get<std::string>();
                  t->delay = element["delay"].get<int>();
@@ -68,7 +70,7 @@ Conf* jsonConf(std::string jsonConfig) {
          } else if( jconfigs["category"] == "content") {
              ContentConf* c = new ContentConf();
 
-             for( auto& element : jconfigs["parameter"]) {
+             for( auto& element : jconfigs["parameters"]) {
                  c->resource = element["resource"].get<std::string>();
                  c->http_status = element["http-status"].get<std::string>();
                  c->headers = element["headers"].get<std::string>();

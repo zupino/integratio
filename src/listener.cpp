@@ -133,12 +133,14 @@ bool Listener::forwardPacket(PDU* pkt) {
 
         BOOST_LOG_TRIVIAL(debug)    <<  "[Listener][forwardPacket()] Packet not matching with any strem," <<
                                         " and all Responders are busy";
+        return false;
     }
         
     else {
         BOOST_LOG_TRIVIAL(debug)    << "[Listener][forwardPacket()] The pkt does not have TCP layer.";
         return false;
     }
+
 }
 
 

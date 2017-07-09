@@ -17,8 +17,12 @@ LIB := -lpthread -ltins -lboost_log -lboost_log_setup -lboost_filesystem -lboost
 INC := -I include -I /usr/local/include
 
 $(TARGET): $(OBJECTS)
-	@echo " Linking..."
+	@echo " Linking...";
 	@echo " $(CC) $(LINKOPT) $^ -o $(TARGET) $(LIB)"; $(CC) $(LINKOPT) $^ -o $(TARGET) $(LIB)
+	@echo " Setting capabilities for integratio.."; sudo setcap CAP_NET_RAW=+eip $(TARGET)
+	@echo " Setting capabilities for GDB.."; sudo setcap CAP_NET_RAW=+eip /usr/bin/gdb
+	@echo " Setting capabilities for Shell.."; sudo setcap CAP_NET_RAW=+eip /bin/bash
+
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
@@ -30,5 +34,9 @@ clean:
 	@echo " $(RM) -r .cache"; $(RM) -r .cache
 	@echo " $(RM) -r $(TEST)/__pycache__"; $(RM) -r $(TEST)/__pycache__
 	@echo " $(RM) -r $(TEST)/.cache"; $(RM) -r $(TEST)/.cache
+	@echo " Cleaning capabilities for GDB.."; sudo setcap CAP_NET_RAW=-eip /usr/bin/gdb
+	@echo " Cleaning capabilities for Shell.."; sudo setcap CAP_NET_RAW=-eip /bin/bash
 
 .PHONY: clean
+
+all: $(TARGET)
