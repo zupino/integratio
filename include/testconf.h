@@ -10,7 +10,8 @@ class Conf {
 public:
 	virtual std::string getCategory() = 0;
 	virtual std::string getSubCategory() = 0;
-	virtual ~Conf();
+	Conf() {};
+	~Conf() {};
 };
 
 class TczConf: public Conf {
@@ -24,7 +25,7 @@ public:
 	}
 
 	std::string getSubCategory() {
-			return "tcp";
+		return "tcp";
 	}
 };
 

@@ -233,31 +233,29 @@ namespace {
         void sendData(psh_ack const& evt)    {
             BOOST_LOG_TRIVIAL(debug) << "[ESTABLISHED] sendData";
 
-            if (responder->httz != NULL) {
-                // Extract the RawPDU object.
-                const RawPDU& raw = evt.p.rfind_pdu<RawPDU>();
+		// Extract the RawPDU object.
+		const RawPDU& raw = evt.p.rfind_pdu<RawPDU>();
 
-                // Finally, take the payload (this is a vector<uint8_t>)
-                const RawPDU::payload_type& v = raw.payload();
+		// Finally, take the payload (this is a vector<uint8_t>)
+		const RawPDU::payload_type& v = raw.payload();
+		std::string payload(v.begin(),v.end());
+		std::string res_payload = "";
 
-                std::string payload(v.begin(),v.end());
-                string res_payload = responder->httz->getResponse(payload);
+		if (responder->httz != NULL) {
+			std::string res_payload = responder->httz->getResponse(payload);
+		}
 
-                RawPDU* raw_s;
-                            
-                // Prepare and send the packet
-                raw_s = new RawPDU(res_payload);
+		RawPDU* raw_s;
 
-                tcp_s.flags(TCP::ACK);
-                // tcp_s /= *raw;
+		// Prepare and send the packet
+		raw_s = new RawPDU(res_payload);
+
+		tcp_s.flags(TCP::ACK);
+		// tcp_s /= *raw;
+
+		BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendData().";
+		responder->send( ip_s / tcp_s / *(raw_s), __FUNCTION__ );
             
-                BOOST_LOG_TRIVIAL(debug)	<< "[TCPResponder][SEND] sendData().";
-                responder->send( ip_s / tcp_s / *(raw_s), __FUNCTION__ );
-        }
-            // Remove the payload
-            // delete tcp_s.release_inner_pdu();
-            // raw = new RawPDU("");
-
         }
 
         void sendFinAck(fin_ack const&)    {
