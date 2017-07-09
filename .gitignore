@@ -3,3 +3,9 @@
 .classpath
 .project
 .cproject
+.cache/
+bin/
+build/
+tests/time/.cache/
+tests/time/__pycache__/
+
