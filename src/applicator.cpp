@@ -6,16 +6,20 @@ Applicator::~Applicator() {}
 HTTPApplicator::HTTPApplicator() {}
 HTTPApplicator::~HTTPApplicator() {}
 
-string Applicator::getResponse(string requestPayload) {
-    
+std::string Applicator::getResponse(string requestPayload) {
+
+	std::string ret;
+
     std::unordered_map<std::string,std::string>::iterator got = resources.find(requestPayload);
     if ( got == resources.end() ) {
         std::cout << "[Applicator] Resource not found.";
-        return "";
+        ret = "";
     }
     else {
-        return got->second;
+    	ret = got->second;
     }
+
+    return ret;
 
 }
 

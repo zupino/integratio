@@ -1,0 +1,35 @@
+{
+	"test-id": "delay001",
+	"interface": "eth0",
+	"lis-port": 80,
+	"configs": [{
+			"category": "time",
+			"parameters":
+			[{
+				"state": "ESTABLISHED",
+				"action": "sendData",
+				"delay": 1
+			}]
+		},
+		{
+			"category": "content",
+			"parameters":
+			[{
+					"resource": "delay.html\n",
+					"http-status": "HTTP/1.1 200 OK\r\n",
+					"body": "Response for delay.html",
+					"headers": "Connection: close\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nServer: Apache/2.4.10 (Unix)\r\n"
+			}]
+		},
+		{
+			"category": "content",
+			"parameters":
+			[{
+					"resource": "delay.html",
+					"http-status": "HTTP/1.1 200 OK\r\n",
+					"body": "Response for delay.html",
+					"headers": "Connection: close\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nServer: Apache/2.4.10 (Unix)\r\n"
+			}]
+		}
+	]
+}

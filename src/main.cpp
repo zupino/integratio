@@ -56,23 +56,26 @@ if( argc>0 ) {
 		    std::string strConf((	std::istreambuf_iterator<char>(i)),
 	        						std::istreambuf_iterator<char>() 	);
 
-		    Conf* conf = jsonConf( strConf );
+		    vector<Conf*> configs = jsonConf( strConf );
+
+		    for (Conf* conf: configs) {
             
-		    if( conf->getCategory() == "content" ) {
+				if( conf->getCategory() == "content" ) {
 
-				HTTPApplicator * http = new HTTPApplicator();
+					HTTPApplicator * http = new HTTPApplicator();
 
-				// TODO Cast different *Conf depending on JSON content
-				ContentConf* cc = dynamic_cast<ContentConf*>(conf);
+					// TODO Cast different *Conf depending on JSON content
+					ContentConf* cc = dynamic_cast<ContentConf*>(conf);
 
-				// tcz[j-1].addTimeConf( *tc );
-				http->addResource( *cc );
-				tcz[j-1].httz = http;
-				connector.responders.push_back( &tcz[j-1] );
-		    } else if ( conf->getCategory() == "time" ) {
-		    	TimeConf* tc = dynamic_cast<TimeConf*>(conf);
+					// tcz[j-1].addTimeConf( *tc );
+					http->addResource( *cc );
+					tcz[j-1].httz = http;
 
-		    	tcz[j-1].timeTests.push_back( *tc );
+				} else if ( conf->getCategory() == "time" ) {
+					TimeConf* tc = dynamic_cast<TimeConf*>(conf);
+					tcz[j-1].timeTests.push_back( *tc );
+
+				}
 		    }
 
 		    // Add the configured Responder to the Listener

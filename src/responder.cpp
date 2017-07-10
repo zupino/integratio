@@ -242,7 +242,7 @@ namespace {
 		std::string res_payload = "";
 
 		if (responder->httz != NULL) {
-			std::string res_payload = responder->httz->getResponse(payload);
+			res_payload = responder->httz->getResponse(payload);
 		}
 
 		RawPDU* raw_s;
@@ -345,7 +345,7 @@ TCPResponder::~TCPResponder() {
 
 void TCPResponder::startListen() {
 	// This is the method the Thread attach to
-    BOOST_LOG_TRIVIAL(debug) << "[TCPResponder][startListen()] ENtering startListener()";	
+    BOOST_LOG_TRIVIAL(debug) << "[TCPResponder][startListen()] Entering startListener()";
 	bool terminateFlag = true;
 	TCP* tcp_r = NULL;
 
@@ -388,6 +388,9 @@ void TCPResponder::processPacket(PDU* pdu) {
 	TCP* tcp_r;
     IP* ip_r;
 
+    Tins::TCP tcp_last = boost::static_pointer_cast<integratio>(stateMachine)->tcp_r;
+    Tins::IP ip_last = boost::static_pointer_cast<integratio>(stateMachine)->ip_r;
+
     TCP& tcp_s = boost::static_pointer_cast<integratio>(stateMachine)->tcp_s;
     IP& ip_s = boost::static_pointer_cast<integratio>(stateMachine)->ip_s;
     int& streamId = boost::static_pointer_cast<integratio>(stateMachine)->streamId;
@@ -409,12 +412,33 @@ void TCPResponder::processPacket(PDU* pdu) {
     }
 
     // Get the payload, if any
-    
-    std::string payload;
-    RawPDU* raw = tcp_r->find_pdu<RawPDU>();
-    if( raw ){
-        const RawPDU::payload_type& pl = raw->payload();
-        payload.assign(pl.begin(), pl.end());
+	std::string payload;
+	RawPDU* raw = tcp_r->find_pdu<RawPDU>();
+	if( raw ){
+		const RawPDU::payload_type& pl = raw->payload();
+		payload.assign(pl.begin(), pl.end());
+	}
+
+	std::string payload_last;
+	RawPDU* raw_last = tcp_last.find_pdu<RawPDU>();
+	if( raw_last ){
+		const RawPDU::payload_type& pl_last = raw_last->payload();
+		payload_last.assign(pl_last.begin(), pl_last.end());
+	}
+
+    // TODO	Not super sure if this is reliable way to
+    //		verify if an incoming packet is a retransmitted.
+
+    // Check if incoming packet is re-transmitted.
+    // If ACK, SEQ and Payload of incoming is the same as last received,
+    // packet is re-transmitted. Ignore.
+    if(
+    		tcp_last.ack_seq() == tcp_r->ack_seq() &&
+			tcp_last.seq() == tcp_r->seq() &&
+			payload == payload_last
+
+    ) {
+    	return;
     }
 
     // if client ACK bigger than local SEQ, I update local SEQ

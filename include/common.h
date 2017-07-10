@@ -19,7 +19,7 @@ std::string flags(TCP* t);
 // TODO This might need to return a more generic
 //      Listener*, for the moment we have only
 //      IP use cases
-Conf* jsonConf(std::string);
+vector<Conf*> jsonConf(std::string);
 
 // Just a trim() function for the string
 std::string trim(const std::string& str,

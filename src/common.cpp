@@ -45,7 +45,9 @@ std::string flags(TCP* t){
 
 /* Tool for reading Test Conf from JSON */
 
-Conf* jsonConf(std::string jsonConfig) {
+vector<Conf*> jsonConf(std::string jsonConfig) {
+
+	std::vector<Conf*> confs = {};
 
     // parse explicitly
     json jc = json::parse( jsonConfig );
@@ -64,8 +66,7 @@ Conf* jsonConf(std::string jsonConfig) {
                  t->delay = element["delay"].get<int>();
              }
 
-
-             return t;
+             confs.push_back( t );
              
          } else if( jconfigs["category"] == "content") {
              ContentConf* c = new ContentConf();
@@ -77,17 +78,19 @@ Conf* jsonConf(std::string jsonConfig) {
                  c->body = element["body"].get<std::string>();
              }
 
-             return c;
+             confs.push_back( c );
              
          }  else if( jconfigs["category"] == "packet" ) {
              // packet case
-             return NULL;
+             break;
 
          } else {
              // default
-             return NULL;
+             break;
          }
     }
+
+    return confs;
 }
 
 std::string trim(const std::string& str,

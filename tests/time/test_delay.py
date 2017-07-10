@@ -43,7 +43,7 @@ def runConnector():
 
 @pytest.fixture(scope='function')
 def runConnectorSend():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_send_1.json", "./tests/time/time_send_2.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_send_3.json"])
     time.sleep(0.1)
     yield p
     p.kill();
@@ -102,7 +102,7 @@ def test_delay_4(runConnectorCloseDelay):
     sock.setblocking(1)
     sock.connect(server_address)
 
-    sock.send("get /delay.html")
+    sock.send("delay.html")
     print sock.recv(1024)
     
     sock.shutdown(socket.SHUT_RDWR)
@@ -123,7 +123,7 @@ def test_delay_5(runConnector):
     sock.setblocking(1)
     sock.connect(server_address)
 
-    sock.send("get /delay.html")
+    sock.send("delay.html")
     print sock.recv(1024)
 
     sock.shutdown(socket.SHUT_RDWR)
