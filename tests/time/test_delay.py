@@ -57,7 +57,7 @@ def runConnectorCloseDelay():
 
 @pytest.fixture(scope='function')
 def runConnectorParallel():
-    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_parallel_1.json", "./tests/time_parallel_2.json"])
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_parallel_1.json", "./tests/time/time_parallel_2.json"])
     time.sleep(0.1)
     yield p
     p.kill();
