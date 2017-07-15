@@ -31,8 +31,8 @@ IPListener::IPListener() {
 
 	// Set the sniffer
 	snifferConfig.set_filter(  	"ip and tcp and (tcp port 80) \
-								and ((ip src 192.168.178.37) or \
-								(ip src 192.168.178.89)) and \
+								and ((ip src " + remoteAddress.to_string() + ") or \
+								(ip src " + localAddress.to_string() + ")) and \
 								((ip dst " + localAddress.to_string() + 
 								") or (ip dst " + remoteAddress.to_string() + "))");
 	snifferConfig.set_immediate_mode(true);
