@@ -8,4 +8,6 @@ bin/
 build/
 tests/time/.cache/
 tests/time/__pycache__/
+tests/content/.cache/
+tests/content/__pycache__/
 .pydevproject

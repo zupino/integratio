@@ -430,11 +430,12 @@ void TCPResponder::processPacket(PDU* pdu) {
     //		verify if an incoming packet is a retransmitted.
 
     // Check if incoming packet is re-transmitted.
-    // If ACK, SEQ and Payload of incoming is the same as last received,
+    // If ACK, SEQ, Flags and Payload of incoming is the same as last received,
     // packet is re-transmitted. Ignore.
     if(
     		tcp_last.ack_seq() == tcp_r->ack_seq() &&
 			tcp_last.seq() == tcp_r->seq() &&
+			tcp_last.flags() == tcp_r->flags() &&
 			payload == payload_last
 
     ) {

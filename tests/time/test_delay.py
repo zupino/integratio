@@ -54,6 +54,13 @@ def runConnectorCloseDelay():
     time.sleep(0.1)
     yield p
     p.kill();
+    
+@pytest.fixture(scope='function')
+def runConnectorCloseDelayNoData():
+    p = subprocess.Popen(["./bin/integratio", "./tests/time/time_close_no_data.json"])
+    time.sleep(0.1)
+    yield p
+    p.kill();
 
 @pytest.fixture(scope='function')
 def runConnectorParallel():
@@ -88,7 +95,7 @@ def test_delay_3(runConnectorSend):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
     sock.connect(server_address)
-    sock.send("delay.html")
+    sock.send("GET /delay.html HTTP/1.1\r\n\r\n")
     start = time.time()
     print sock.recv(1024)
     end = time.time()
@@ -102,7 +109,7 @@ def test_delay_4(runConnectorCloseDelay):
     sock.setblocking(1)
     sock.connect(server_address)
 
-    sock.send("delay.html")
+    sock.send("GET /delay.html HTTP/1.1\r\n\r\n")
     print sock.recv(1024)
     
     sock.shutdown(socket.SHUT_RDWR)
@@ -113,17 +120,34 @@ def test_delay_4(runConnectorCloseDelay):
     end = time.time()
 
     assert (end - start) > 2
-
-# This test verify that closing the connection is NOT
-# delay if the TIME test case aply to another State
-# Note fixture is runConnector, not runConnectorClose
-def test_delay_5(runConnector):
+    
+# This test verify the delay is applied to a closing connection
+# without requesting/sending any data (time only test case, no content)
+def test_delay_5(runConnectorCloseDelayNoData):
     server_address = ("192.168.178.89", 80)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setblocking(1)
     sock.connect(server_address)
 
-    sock.send("delay.html")
+    sock.shutdown(socket.SHUT_RDWR)
+
+    start = time.time()
+    while(getTCPState(sock) != "7"):
+        pass
+    end = time.time()
+
+    assert (end - start) > 2
+
+# This test verify that closing the connection is NOT
+# delay if the TIME test case apply to another State
+# Note fixture is runConnector, not runConnectorClose
+def test_delay_6(runConnector):
+    server_address = ("192.168.178.89", 80)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setblocking(1)
+    sock.connect(server_address)
+
+    sock.send("GET /delay.html HTTP/1.1\r\n\r\n")
     print sock.recv(1024)
 
     sock.shutdown(socket.SHUT_RDWR)
@@ -138,7 +162,7 @@ def test_delay_5(runConnector):
 # This test verifies a different delay for
 # two different TCP streams
 
-def test_delay_6(runConnectorParallel):
+def test_delay_7(runConnectorParallel):
     server_address = ("192.168.178.89", 80)
     sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
