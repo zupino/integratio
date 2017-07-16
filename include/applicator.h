@@ -14,7 +14,7 @@ public:
     // Methods
     Applicator();
     ~Applicator();
-    std::string getResponse( std::string requestPayload );
+    virtual std::string getResponse( std::string requestPayload );
     
     
 };
@@ -23,7 +23,8 @@ class HTTPApplicator: public Applicator {
 public:
     HTTPApplicator();
     ~HTTPApplicator();
-    bool addResource(ContentConf c); 
+    bool addResource(ContentConf c);
+    std::string getResponse( std::string requestPayload );
 };
 
 class DNSApplicator: public Applicator {};
