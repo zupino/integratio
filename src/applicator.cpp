@@ -12,6 +12,8 @@ HTTPApplicator::HTTPApplicator() {}
 HTTPApplicator::~HTTPApplicator() {}
 
 std::string HTTPApplicator::getResponse(std::string requestPayload) {
+	// This is the implementation specific for HTTP,
+	// payload is assumed to be an HTTP request
 
 	std::string ret;
 
@@ -42,11 +44,12 @@ std::string HTTPApplicator::getResponse(std::string requestPayload) {
 
 }
 
+/*
+ * This is the generic implementation for all Applicator
+ * Each specific one should re-implement
+ * TODO Mark as virtual method (if not already)
+ * */
 std::string Applicator::getResponse(string requestPayload) {
-	// This is the implementation specific for HTTP,
-	// payload is assumed to be an HTTP request
-
-
 
 	std::string ret;
 

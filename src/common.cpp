@@ -69,16 +69,17 @@ vector<Conf*> jsonConf(std::string jsonConfig) {
              confs.push_back( t );
              
          } else if( jconfigs["category"] == "content") {
-             ContentConf* c = new ContentConf();
 
              for( auto& element : jconfigs["parameters"]) {
+            	 ContentConf* c = new ContentConf();
+
                  c->resource = element["resource"].get<std::string>();
                  c->http_status = element["http-status"].get<std::string>();
                  c->headers = element["headers"].get<std::string>();
                  c->body = element["body"].get<std::string>();
-             }
 
-             confs.push_back( c );
+                 confs.push_back( c );
+             }
              
          }  else if( jconfigs["category"] == "packet" ) {
              // packet case

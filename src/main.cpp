@@ -51,6 +51,10 @@ if( argc>0 ) {
     for( int j=1; j<argc; j++){
 		    std::string fileName( argv[j] );
 
+		    // Allocating new Applicator, just in case.
+		    // We need one for each Content Configuration file
+		    HTTPApplicator * http = new HTTPApplicator();
+
 		    // Test case Configuration
 	        std::ifstream i( fileName );
 		    std::string strConf((	std::istreambuf_iterator<char>(i)),
@@ -62,14 +66,14 @@ if( argc>0 ) {
             
 				if( conf->getCategory() == "content" ) {
 
-					HTTPApplicator * http = new HTTPApplicator();
-
 					// TODO Cast different *Conf depending on JSON content
 					ContentConf* cc = dynamic_cast<ContentConf*>(conf);
 
-					// tcz[j-1].addTimeConf( *tc );
 					http->addResource( *cc );
-					tcz[j-1].httz = http;
+
+					if ( tcz[j-1].httz != http ) {
+						tcz[j-1].httz = http;
+					}
 
 				} else if ( conf->getCategory() == "time" ) {
 					TimeConf* tc = dynamic_cast<TimeConf*>(conf);
