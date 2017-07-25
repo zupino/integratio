@@ -1,0 +1,18 @@
+{
+    "test-id"   : "Content part test 1",
+    "interface" : "eth0",
+    "tcp-port"  : 80,
+    "configs"     : [
+        {
+            "category"  : "content",
+            "parameters": [
+                {
+                        "resource"  	: "/part4",
+                        "http-status" 	: "HTTP/1.1 200 OK\r\n",
+                        "body"      	: "Response for PART 4",
+                        "headers"   	: "Connection: close\r\nDate: Sat, 27 Aug 2016 18:51:19 GMT\r\nServer: Apache/2.4.10 (Unix)\r\n"
+                }
+            ]
+        }
+    ]
+}
