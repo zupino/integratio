@@ -27,6 +27,3 @@ Clone integratio on home dir
 `cd integratio`
 `make`
 
-stuck here:
-/json.hpp:6321:62: error: wrong number of template arguments (1, should be 2)
-590return *lhs.m_value.array < *rhs.m_value.array;

@@ -4,7 +4,7 @@
 .project
 .cproject
 .cache/
-bin/
+# bin/
 build/
 tests/time/.cache/
 tests/time/__pycache__/
