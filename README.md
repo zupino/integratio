@@ -1,7 +1,6 @@
 # integratio
 Configurable user-space network stack, aimed to simulate network error condition, delays and vulnerabilities.
 
-
 Dependencies
 
 This was checked on fresh Ubuntu 18.04 on VMWare virtual machine.
@@ -32,5 +31,5 @@ Also, remember to block RST packet from the server machine with the following ip
 NOTE    This rule will check both RST and PSH flags, and drop only the RST=1 and PSH=0
         In this way, we can block the RST from kernel, but let the RST PSH from test cases
 
-iptables -A OUTPUT -p tcp --tcp-flags RST,PSH RST -j DROP
+`iptables -A OUTPUT -p tcp --tcp-flags RST,PSH RST -j DROP`
 
