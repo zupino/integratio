@@ -1,10 +1,17 @@
 # integratio
 Configurable user-space network stack, aimed to simulate network error condition, delays and vulnerabilities.
 
-Test cases can be described in JSON by category ('time', 'content') and combined together. For example, the short demo below shows an HTTP request response provided with delay at the TCP connection ESTABLISHING state and a different delay apply to data transfer during the ESTABLISHED TCP connection state. 
+Integratio can be configured via JSON Configuration test cases, which describes which application level content should be delivered and in which points delayed should be introduced. 
+
+Introduction of delays happens by state in the TCP state machine. State transition will wait for the test case defined value before execuring the state transition.  
+
+Test cases can be described in JSON by category ('time', 'content') and combined together. For example, the short demo below shows an HTTP request response provided with delay at the TCP connection ESTABLISHING state and a different delay apply to data transfer during the ESTABLISHED TCP connection state. You can see how the delays valued configured on the Configuration test cases are matching with what get measured by Chrome Developer Tool: 
 
 ![](demo/output5.gif)
 
+Next features: 
+- add support for DNS, NTP, DHCP and other application level protocols
+- integration of ssh-based control access
 Dependencies
 
 This was checked on fresh Ubuntu 18.04 on VMWare virtual machine.
