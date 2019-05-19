@@ -3,7 +3,7 @@ Configurable user-space network stack, aimed to simulate network error condition
 
 Test cases can be described in JSON by category ('time', 'content') and combined together. For example, the short demo below shows an HTTP request response provided with delay at the TCP connection ESTABLISHING state and a different delay apply to data transfer during the ESTABLISHED TCP connection state. 
 
-![](http://www.marcozunino.it/integratio/output6.gif)
+![](demo/output5.gif)
 
 Dependencies
 
